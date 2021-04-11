@@ -1,3 +1,4 @@
+[![Deploy](https://github.com/emmanuelnk/transaction-service-iac/actions/workflows/deploy.yml/badge.svg)](https://github.com/emmanuelnk/transaction-service-iac/actions/workflows/deploy.yml)
 # Transaction Service IaC
 
 This is a CDK project to create AWS IaC for a fake Transaction project.
