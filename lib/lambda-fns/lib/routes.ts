@@ -4,10 +4,10 @@ import {
 } from './events/transactions'
 
 export const protectedRoutes: Record <string, any> = {
-  'transaction/deposit': {
+  '/transaction/deposit': {
     POST: depositTransaction
   },
-  'transaction/withdrawal': {
+  '/transaction/withdrawal': {
     POST: withdrawalTransaction
   }
 }

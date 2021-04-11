@@ -21,8 +21,7 @@ Consists of:
 - Four consumer Lambda functions that consume events from EventBridge based on different rules
 - A dead letter queue for each of the consumer Lambda functions for events that fail
 
-## Deploy from Local
-### Pre-requisites
+## Pre-requisites for Local Testing and Deploy
 - Ensure you have a `.env` file if you want to dpeloy from local (see `.env.example`)
 - Make sure you have `.aws/credentials` file. This is what it looks like:
   ```
@@ -36,7 +35,12 @@ Consists of:
   region=us-west-2
   output=json
   ``` 
-  
+## Testing
+- You can run the test suite (inside `./test/`) included with the stack with
+```
+npm test
+```
+## Deploy from Local  
 ### Synth
 - To view/generate the CloudFormation template
   ```
@@ -48,7 +52,25 @@ Consists of:
   cdk deploy --profile default
   ```
 ## Deploy via CI/CD (Github Actions)
-- Deployment pipeline via Github Actions
+- Deployment pipeline via Github Actions (see `.github/workflows/deploy.yml`)
 - To deploy to stage `dev`, merge/push to `dev` branch
 - To deploy to stage `prod`, merge/push to `prod` branch
+
+### Destroy the stack
+- to destroy the stack and remove all created resources simply run
+  ```
+  cdk destroy --profile default
+  ```
+
+### Sample Event
+```json
+// POST https://liz92p0to8.execute-api.us-west-2.amazonaws.com/prod/transaction/deposit
+// HEADER x-api-key xxxxxXXXxXXxXXXXXxxx
+{
+    "location": "US",
+    "amount": 45,
+    "cardNumber": 45566541332646,
+    "bankId": 4052
+}
+```
   

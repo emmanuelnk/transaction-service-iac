@@ -1,7 +1,7 @@
 {
   "name": "transaction-service-rest-api",
   "version": "1.0.0",
-  "description": "Lambda functions for API Gateway REST API",
+  "description": "Lambda functions for API Gateway REST API and EventBridge Consumers",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

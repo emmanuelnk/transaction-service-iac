@@ -8,7 +8,9 @@ import {
   EventDetailStatus,
   TransactionsEventBridgeEvent,
 } from './interfaces'
+import { success, serverError } from '../responses'
 
+AWS.config.region = process.env.AWS_REGION || 'us-west-2'
 const eventbridge = new AWS.EventBridge()
 
 const getLocationApproval = async (location: string): Promise<EventDetailStatus> => {
@@ -21,7 +23,7 @@ const getLocationApproval = async (location: string): Promise<EventDetailStatus>
   return EventDetailStatus.PENDING
 }
 
-export const deposit = async (params: Record<string, any>): Promise<AWS.EventBridge.PutEventsResponse> => {
+export const deposit = async (params: Record<string, any>): Promise<any> => {
   const eventDetail: EventDetail = {
     action: EventDetailAction.DEPOSIT,
     location: params.location,
@@ -39,10 +41,14 @@ export const deposit = async (params: Record<string, any>): Promise<AWS.EventBri
     Detail: JSON.stringify(eventDetail),
   }
 
-  return eventbridge.putEvents({ Entries: [event] }).promise()
+  try {
+    return success(await eventbridge.putEvents({ Entries: [event] }).promise())
+  } catch(err) {
+    return serverError(err)
+  }
 }
 
-export const withdrawal = async (params: Record<string, any>): Promise<AWS.EventBridge.PutEventsResponse> => {
+export const withdrawal = async (params: Record<string, any>): Promise<any> => {
   const eventDetail: EventDetail = {
     action: EventDetailAction.WITHDRAWAL,
     location: params.location,
@@ -60,5 +66,9 @@ export const withdrawal = async (params: Record<string, any>): Promise<AWS.Event
     Detail: JSON.stringify(eventDetail),
   }
 
-  return eventbridge.putEvents({ Entries: [event] }).promise()
+  try {
+    return success(await eventbridge.putEvents({ Entries: [event] }).promise())
+  } catch(err) {
+    return serverError(err)
+  }
 }
