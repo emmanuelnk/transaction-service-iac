@@ -1,6 +1,6 @@
 import { expect as expectCDK, matchTemplate, MatchStyle } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
-import * as TransactionService from '../lib/transaction-service-stack';
+import * as TransactionService from '../lib';
 
 test('Empty Stack', () => {
     const app = new cdk.App();
