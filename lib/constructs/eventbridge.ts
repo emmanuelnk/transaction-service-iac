@@ -27,7 +27,7 @@ const eventBridgeConsumerRules: Record<string, events.RuleProps> = {
       }
     }
   },
-  'us.deposit': {
+  'us-deposit': {
     ruleName: `${config.projectName}-us-deposit`,
     description: 'Executes deposit transactions for the US',
     enabled: true,
@@ -40,7 +40,7 @@ const eventBridgeConsumerRules: Record<string, events.RuleProps> = {
       }
     }
   },
-  'ca.deposit': {
+  'ca-deposit': {
     ruleName: `${config.projectName}-ca-deposit`,
     description: 'Executes deposit transactions for CA',
     enabled: true,
@@ -76,7 +76,7 @@ export class EventBridgeRules {
       const eventBridgeRule = new events.Rule(scope, `${key}EventBridgeRule`, eventBridgeConsumerRules[key])
 
       eventBridgeRule.addTarget(new events_targets.LambdaFunction(consumerFunction, {
-        deadLetterQueue: new sqs.Queue(scope, `${key}-dlq`, { queueName: `${key}.dlq` }),
+        deadLetterQueue: new sqs.Queue(scope, `${key}-dlq`, { queueName: `${key}-dlq` }),
         retryAttempts: props.dlqRetryAttempts,
         maxEventAge: cdk.Duration.hours(props.dlqMessageMaxAgeHours)
       }))

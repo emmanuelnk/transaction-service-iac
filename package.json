@@ -5,13 +5,14 @@
     "transaction-service": "bin/transaction-service.js"
   },
   "scripts": {
+    "build-layer": "cd lib/lambda-fns;npm install && npm run build; cd ../..",
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "STAGE=test jest",
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.90.1",
+    "@aws-cdk/assert": "^1.97.0",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
     "aws-cdk": "^1.97.0",

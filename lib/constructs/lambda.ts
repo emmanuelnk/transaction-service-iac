@@ -26,8 +26,7 @@ export class ApiRestProducer {
       const role = new iam.Role(scope, camelize(`${props.prefix}RestApiLambdaRole`), {
           assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
           managedPolicies: [
-            iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"),
-            iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"),
+            iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")
           ]
       })
 
@@ -69,12 +68,10 @@ export class ApiRestProducer {
         functionName: `${props.prefix}-rest-api-handler`,
         code: lambda.Code.fromAsset('lib/lambda-fns/src'),
         layers: [layer],
-        handler: 'api.producer.handler',
+        handler: 'api-producer.handler',
         runtime: lambda.Runtime.NODEJS_12_X,
-        timeout: cdk.Duration.seconds(60),
-        memorySize: 512,
-        vpc: props.vpc,
-        vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
+        timeout: cdk.Duration.seconds(30),
+        memorySize: 256,
         role,
         environment: {
           API_KEY: apiKeySecret.secretValue.toString()
@@ -106,8 +103,7 @@ interface ConsumerFunction extends lambda.IFunction {
     const role = new iam.Role(scope, camelize(`${props.prefix}EventBridgeConsumerLambdaRole`), {
         assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         managedPolicies: [
-          iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"),
-          iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"),
+          iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")
         ]
     })
 
@@ -120,21 +116,19 @@ interface ConsumerFunction extends lambda.IFunction {
     // create the consumer lambda functions
     this.consumerFunctions = {}
 
-    for(const [index, consumer] of ['deposit', 'us.deposit', 'ca.deposit', 'withdrawal' ].entries()) {
+    for(const [index, consumerName] of ['deposit', 'us-deposit', 'ca-deposit', 'withdrawal' ].entries()) {
       const consumerFunction = new lambda.Function(scope, `${props.prefix}-eventbridge-function-${index}-handler`, {
-        functionName: `${props.prefix}-${consumer}`,
+        functionName: `${props.prefix}-${consumerName}`,
         code: lambda.Code.fromAsset('lib/lambda-fns/src/consumers'),
         layers: [layer],
-        handler: `${consumer}.handler`,
+        handler: `${consumerName}.handler`,
         runtime: lambda.Runtime.NODEJS_12_X,
-        timeout: cdk.Duration.seconds(60),
+        timeout: cdk.Duration.seconds(30),
         memorySize: 256,
-        vpc: props.vpc,
-        vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
         role
       })
 
-      this.consumerFunctions[consumer] = consumerFunction
+      this.consumerFunctions[consumerName] = consumerFunction
     }
   }
 }

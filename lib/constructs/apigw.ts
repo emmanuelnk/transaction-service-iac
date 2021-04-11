@@ -27,7 +27,11 @@ export class ApiGatewayRestApi {
       `${props.prefix}-lambda-rest-api`,
       {
         restApiName: camelize(`${props.prefix}LambdaRestApi`),
-        handler: props.handler
+        handler: props.handler,
+        defaultCorsPreflightOptions: {
+          allowMethods: apigw.Cors.ALL_METHODS,
+          allowOrigins: apigw.Cors.ALL_METHODS
+        }
       }
     )
   }

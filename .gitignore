@@ -7,3 +7,5 @@ node_modules
 .cdk.staging
 cdk.out
 .env
+lib/lambda-fns/layer.zip
+lib/lambda-fns/src
